@@ -1,0 +1,24 @@
+<style>
+    .interest-skip {
+        z-index: 1;
+        position: fixed;
+        right: 10px;
+        top: 55px;
+    }
+</style>
+<input type="text" value="<%= res %>" id="txtMsgId">
+<div class="interest-skip">
+
+    <span id="btnInterested">
+        <!--<i class="fa fa-heart"></i>-->
+        <img src="/static/img/1.jpg" width="40" alt="一">
+    </span>
+    &nbsp;&nbsp;&nbsp;
+    <span id="btnSkip">
+         <img src="/static/img/2.jpg" width="40" alt="二">
+        <!--<i class="fa fa-ban"></i>-->
+    </span>
+</div>
+<div id="currImg">
+    <img src="/static/img/loading.gif" width="<%= my_width %>" height="<%= my_height %>" class="img-rounded">
+</div>

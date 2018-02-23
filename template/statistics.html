@@ -1,0 +1,90 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>QQ在线人数</title>
+    <script type="text/javascript" src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+    <style type="text/css">
+        ${demo.css}
+    </style>
+    <meta http-equiv="refresh" content="60*2"><!--两分钟自动刷新一次-->
+    <script src="{% static 'js/jquery_1.11.1_jquery.js' %}"></script>
+    <script type="text/javascript">
+        var data = [], data_y = []
+        $(function () {
+            $.ajax({
+                url: "/ajax_dict",
+                type: "GET",
+                data: {},
+                success: function (res) {
+                    data = JSON.parse(res['system_time']);
+                    data_y = JSON.parse(res['online_number']);
+                    var data_x = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var time_array = data[i].replace(" ", ":").replace(/\:/g, "-").split("-");
+                        for (var j = 0; j < time_array.length; j++) {
+                            if (j == 2)
+                                data_x[i] = time_array[j] + " "
+                            if (j == 3)
+                                data_x[i] = data_x[i] + time_array[j] + ":"
+                            if (j == 4)
+                                data_x[i] = data_x[i] + time_array[j]
+                        }
+
+                    }
+                    $('#container').highcharts({
+
+                        title: {
+                            text: 'QQ用户在线人数统计',
+                            x: -20 //左右边距位置
+                        },
+                        xAxis: {
+                            categories: data_x
+                        },
+                        yAxis: {
+                            title: {
+                                text: '单位 (人)'
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        },
+                        tooltip: {
+                            formatter: function () {
+                                return '<b>' + this.series.name + '</b><br/>' + data[data_x.indexOf(this.x)] + '<br/>' +
+                                        this.y + '(人)'
+                            }
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        },
+                        series: [{
+                            name: 'QQ在线人数',
+                            data: data_y
+                        }]
+                    });
+                },
+                error: function (err) {
+                    alert("redis服务未开启...");
+                }
+            })
+        })
+        <!--
+		function getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+        }
+        -->
+    </script>
+</head>
+<body>
+<script src="{% static 'js/highcharts.js' %}"></script>
+<!--    <script src="http://cdn.hcharts.cn/highcharts/exporting.js"></script>   -->
+<div id="container" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+</body>
+</html>

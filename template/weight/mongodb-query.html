@@ -1,0 +1,97 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>查询信息</title>
+    <style>
+        .div_query {
+            text-align: center;
+        }
+
+        .div_tr {
+            margin-top: 20px;
+        }
+
+        .div_weight {
+            margin-left: 600px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<form method='post' action="mongodb_query" name="mongodb_query" enctype="multipart/form-data">
+    <div class="div_query">
+        <div>
+            {% if o_id == '' or o_id == None %}
+                <input type="text" id="id" name="id" placeholder="输入ID" style="height:30px;"/>
+            {% else %}
+                <input type="text" id="id" name="id" value="{{ o_id }}" placeholder="输入ID" style="height:30px;"/>
+            {% endif %}
+            <input type="submit" value="查询" style="width:80px;height:35px;background-color:E6EFF8"/>
+        </div>
+    </div>
+    <table id="tt" border="2" align="center">
+        <div class="div_tr">
+            <tr>
+                <td align="center" valign="center">ID</td>
+                <td align="center" valign="center">体重</td>
+                <td align="center" valign="center">时长</td>
+                <td align="center" valign="center">时间</td>
+                <td align="center" valign="center">备注</td>
+{#                <td align="center" valign="center">修改</td>#}
+{#                <td align="center" valign="center">删除</td>#}
+            </tr>
+
+            {% if asd %}
+                {% for x in asd %}
+                    <tr>
+                        <td align="center" valign="center">{{ x.id }}</td>
+                        <td align="center" valign="center">{{ x.weight }}kg</td>
+                        <td align="center" valign="center">{{ x.run_time }}分钟</td>
+                        <td align="center" valign="center">{{ x.system_time }}</td>
+                        <td valign="center">{{ x.remark }}</td>
+{#                        <td align="center" valign="center">#}
+{#                            <div>#}
+{#                                <a href="{% url "mongodb_update" %}?id={{ x.id }}">修改</a>#}
+{#                            </div>#}
+{#                        </td>#}
+{#                        <td align="center" valign="center">#}
+{#                            <div>#}
+{#                                <a href="{% url "mongodb_delete" %}?id={{ x.id }}" onclick="return confirm('确定要删除吗？')">删除</a>#}
+{#                            </div>#}
+{#                        </td>#}
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td align="center" valign="center" colspan="5"><b style="color:red">没有数据</b></td>
+                </tr>
+            {% endif %}
+        </div>
+    </table>
+</form>
+<br>
+
+<div class="div_weight">
+    {% if page %}
+        <span>共<b style="color:blue">{{ p.count }}</b>条数据</span>,
+        <span>每页<b style="color:blue">10</b>条</span>,
+        <span>第<b style="color:blue">{{ nowpage }}</b>页/共<b style="color:blue">{{ p.num_pages }}</b>页</span>
+        {% if page.has_previous %}
+            <a href="{% url "mongodb_query" %}?nowpage={{ nowpage }}&pagetype=pageup">
+                上一页
+            </a>
+        {% endif %}
+        {% if page.has_next %}
+            <a href="{% url "mongodb_query" %}?nowpage={{ nowpage }}&pagetype=pagedown">
+                下一页
+            </a>
+        {% endif %}
+    {% else %}
+        <span>共<b style="color:blue">0</b>条数据</span>,<span>共<b style="color:blue">0</b>页</span>
+    {% endif %}
+</div>
+</body>
+</html>

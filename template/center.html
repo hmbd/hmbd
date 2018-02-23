@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>css3居中</title>
+    <style>
+        .div_login {
+            background-color: #00FFFF;
+            position: absolute;
+            width: 18em;
+            height: 6em;
+            top: 50%;
+            left: 50%;
+            margin-top: -3em; /* 高度的一半 */
+            margin-right: -9em; /* 宽度的一半 */
+        }
+
+        .div_login1{
+            position: absolute;
+            background-color: #00FFFF;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .div_login2{
+            background-color: #00FFFF;
+            margin: 50vh auto 0; /* vh: 视口相关的长度单位， 1vh表示视口高度的1% */
+            transform: translateY(-50%);
+        }
+
+        /* 基于父元素 */
+        /*
+        body{
+            height: 100vh;
+            display: flex;
+        }
+        .div_login3{
+            margin: auto;
+        }
+        */
+
+        /* 基于父元素 */
+        body{
+            width: 100%;
+            height: 100%;
+        }
+        .div_login4{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20em;
+            height: 10em;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="div_login4">
+        <div class="div_head">
+            <span><strong>登录</strong></span>
+        </div>
+        <div class="note_div">
+            <strong>注意事项</strong>
+            <span>第一次使用请<a class="weixin" href="{% url "register" %}">注册帐号</a></span>
+        </div>
+    </div>
+</body>
+</html>

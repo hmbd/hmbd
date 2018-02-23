@@ -1,0 +1,31 @@
+{% extends 'extend/index1.html' %}
+{% load staticfiles %}
+{% block sub-title %}
+    测试3
+{% endblock %}
+{% block main-content %}
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+            </script>
+
+            <ul class="breadcrumb">
+                <li>
+                    <i class="icon-home home-icon"></i>
+                    <a href="{% url 'index' %}">首页</a>
+                </li>
+                <li class="active">测试3</li>
+            </ul><!-- .breadcrumb -->
+        </div>
+        {% block page-content %}
+            <div class="page-content">
+                <h3>测试3测试3测试3</h3>
+                <h3>测试3测试3测试3</h3>
+                <h3>测试3测试3测试3</h3>
+                <h3>测试3测试3测试3</h3>
+                <h3>测试3测试3测试3</h3>
+            </div><!-- /.page-content -->
+        {% endblock %}
+    </div><!-- /.main-content -->
+{% endblock %}

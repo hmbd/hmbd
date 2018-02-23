@@ -1,0 +1,121 @@
+{% load staticfiles %}
+{% load url from future %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>spin.js</title>
+    <meta name="description" content="An animated CSS activity indicator with VML fallback.">
+    <meta name="viewport" content="width=1024, maximum-scale=1">
+    <meta property="og:image" content="http://spin.js.org/assets/preview.jpg?v=1"/>
+    <link rel="shortcut icon" href="{% static 'loading/favicon.ico' %}">
+    <link href="{% static 'loading/css/main.css' %}?v=6" type="text/css" rel="stylesheet">
+    <link href="{% static 'loading/css/family.css' %}?family=Amaranth:400,700" rel='stylesheet' type='text/css'>
+    <link href="{% static 'loading/css/prettify.css' %}" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'loading/css/fd-slider.css' %}?v=2">
+    <link rel="stylesheet" type="text/css" href="{% static 'loading/css/fd-slider-tooltip.css' %}">
+    <script type="text/javascript" src="{% static 'loading/js/prettify.js' %}"></script>
+</head>
+<body>
+<br><br>
+<div id="content">
+    <div id="example">
+        <div id="preview"></div>
+        <form id="opts">
+            <label>条数:</label><input type="text" name="lines" min="5" max="26" step="2" value="12"><br>
+            <label>长度:</label><input type="text" name="length" min="0" max="56" value="28"><br>
+            <label>宽度:</label><input type="text" name="width" min="2" max="52" value="14"><br>
+            <label>中心圆半径:</label><input type="text" name="radius" min="0" max="84" value="42"><br>
+            <label>外圆半径:</label><input type="text" name="scale" min="0.0" max="5.0" step="0.25" value="1.0"><br>
+            <label>边角:</label><input type="text" name="corners" min="0" max="1" step="0.1" value="1"><br>
+            <label>透明度:</label><input type="text" name="opacity" min="0" max="1" step="0.05" value="0.25"><br>
+            <label>旋转:</label><input type="text" name="rotate" min="0" max="90" value="0"><br>
+            <label>方向:</label>
+            <select name="direction">
+                <option value="1">顺时针</option>
+                <option value="-1">逆时针</option>
+            </select>
+            <br>
+            <label>速度:</label><input type="text" name="speed" min="0.5" max="2.2" step="0.1" value="1"><br>
+            <label>路径长度:</label><input type="text" name="trail" min="10" max="100" value="60"><br>
+            <label>↕:</label><input class="percent" type="text" name="top" min="0" max="100" value="50"><br>
+            <label>↔:</label><input class="percent" type="text" name="left" min="0" max="100" value="50"><br>
+            <label>阴影:</label><input type="checkbox" name="shadow"><br>
+            <label>亮度:</label><input type="checkbox" name="hwaccel"><br>
+        </form>
+
+        <div class="share">
+            <input type="checkbox" id="share">
+            <label for="share">
+                <b>选中后</b>在url中可以直接设置各参数的值
+            </label>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+<script src="{% static 'loading/js/fd-slider.js' %}"></script>
+<script src="{% static 'loading/js/spin.min.js' %}"></script>
+<script>
+    $.fn.spin = function (opts) {
+        this.each(function () {
+            var $this = $(this), data = $this.data();
+            if (data.spinner) {
+                data.spinner.stop();
+                delete data.spinner
+            }
+            if (opts !== false) {
+                window.s = data.spinner = new Spinner($.extend({color: $this.css('color')}, opts)).spin(this)
+            }
+        });
+        return this
+    };
+    prettyPrint();
+    function update() {
+        var opts = {};
+        $('#opts input[min], #opts select').each(function () {
+            var percent = $(this).hasClass('percent')
+                    , val = percent ? this.value + '%' : parseFloat(this.value)
+            $('#opt-' + this.name).text(opts[this.name] = val)
+        });
+        $('#opts input:checkbox').each(function () {
+            opts[this.name] = this.checked;
+            $('#opt-' + this.name).text(this.checked)
+        });
+        $('#preview').spin(opts);
+        if ($('#share').is(':checked')) {
+            window.location.replace('#?' + $('form').serialize())
+        }
+    }
+    $(function () {
+        var params = {};
+        var hash = /^#\?(.*)/.exec(location.hash);
+        if (hash) {
+            $('#share').prop('checked', true);
+            $.each(hash[1].split(/&/), function (i, pair) {
+                var kv = pair.split(/=/);
+                params[kv[0]] = kv[kv.length - 1]
+            })
+        }
+        $('#opts input[min], #opts select').each(function () {
+            var val = params[this.name]
+                    , percent = $(this).hasClass('percent')
+                    , extraOpt = percent ? '%' : '';
+            if (val !== undefined) this.value = val + extraOpt;
+            this.onchange = update
+        });
+        $('#opts input:checkbox').each(function () {
+            this.checked = !!params[this.name];
+            this.onclick = update
+        });
+        $('#share').click(function () {
+            window.location.replace(this.checked ? '#?' + $('form').serialize() : '#!')
+        });
+        update()
+    });
+</script>
+</body>
+</html>

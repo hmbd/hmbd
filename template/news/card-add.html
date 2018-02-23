@@ -1,0 +1,257 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'/>
+    <meta content="telephone=no,email=no" name="format-detection"/>
+    <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.min.css' %}"/>
+
+    <title>发说说</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'bootstrap/AdminLTE/css/AdminLTE.css' %}"/>
+    <link rel="stylesheet" href="{% static 'qqface/css/reset.css' %}">
+    <style>
+        span.emotion {
+            width: 42px;
+            height: 20px;
+            background: url({% static 'qqface/img/icon.gif' %}) no-repeat 2px 2px;
+            padding-left: 20px;
+            cursor: pointer
+        }
+
+        span.emotion:hover {
+            background-position: 2px -28px
+        }
+
+        /*去掉a链接所有的样式*/
+        a:link, a :active, a:visited, a:hover {
+            text-decoration: none;
+            color: blue;
+        }
+
+        #preview {
+            display: none;
+        }
+
+        #new_content {
+            height: 75px;
+            resize: none; /*去除textarea右下角标识*/
+        }
+
+        #add_img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        #img_head {
+            width: 200px;
+            height: 200px;
+        }
+
+        .new_points {
+            text-align: right;
+            margin-top: -20px;
+        }
+
+        .form-group {
+            margin-bottom: 0 !important;
+        }
+
+        /* 保留空格 */
+        {#        span {#}
+        {#            white-space: pre;#}
+        {#        }#}
+    </style>
+</head>
+
+
+<body>
+
+<header class='demos-header' style="padding: 15px 0 5px 3px;">
+    <a class="pull-left demos-title" id="btnBack">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        返回
+    </a>
+
+    <div class="demos-title" style="text-align: center;">
+        写说说
+    </div>
+</header>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <form action="{% url 'card_add' %}" class="form-horizontal" method="POST" enctype="multipart/form-data"
+                  style="padding: 20px 0;">
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6 col-md-4 col-lg-4">
+                        <textarea class="form-control" id="new_content" name="new_content" placeholder="说说内容"
+                                  onkeyup="keypress2()" onblur="keypress2()"
+                                  required></textarea>
+                        <span class="emotion"></span>
+
+                        <p class="new_points"><span id="surplus_word">0</span>/<span
+                                id="new_total">300</span></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6 col-md-4 col-lg-4" id="preview">
+                        <img id="img_head">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6 col-md-4 col-lg-4">
+                        <img src="{% static 'img/img_add.png' %}" id="add_img">
+                    </div>
+                </div>
+                <div class="form-group hidden">
+                    <input id="new_img" name="new_img" multiple type="file" placeholder="选择图片"
+                           onchange="previewImage(this)">
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6 col-md-4 col-lg-4">
+                        <button type="submit" class="btn btn-default">
+                            <i class="fa fa-check"></i>发表
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'qqface/js/jquery-browser.js' %}"></script>
+<script type="text/javascript" src="{% static 'qqface/js/jquery.qqFace.js' %}"></script>
+<script type="text/javascript">
+    // 定时循环
+    /* setInterval(function () {
+     var str = $("#new_content").val();
+     $("#show").html(replace_em(str));
+     }, 1000); */
+    $(function () {
+        $('.emotion').qqFace({
+            id: 'facebox',
+            assign: 'new_content',
+            path: '{% static 'qqface/face/' %}',	//表情存放的路径
+            result: {{ result|safe }}
+        });
+    });
+    //查看结果
+    function replace_em(str) {
+        str = str.replace(/\</g, '&lt;');
+        str = str.replace(/\>/g, '&gt;');
+        str = str.replace(/\n/g, '<br/>');
+        // replace(regexp,replacement) replacement 中的 $ 字符具有特定的含义。
+        // 它说明从模式匹配得到的字符串将用于替换
+        // $1、$2、...、$99　　与 regexp 中的第 1 到第 99 个子表达式相匹配的文本。
+        str = str.replace(/\[([\u4e00-\u9fa5]*|[\w]*)\]/g, '<img src="{% static 'qqface/face/' %}$1.gif" border="0" />');
+        return str;
+    }
+</script>
+<script>
+    // 返回按钮
+    $('#btnBack').click(function () {
+        //window.location.href = document.referrer;//返回到上一个页面
+        window.history.go(-1);
+    });
+    // 上传图片
+    $('#add_img').click(function () {
+        $("#new_img").click();
+    });
+</script>
+<script>
+    function keypress2() // textarea输入长度处理
+    {
+        var content = $("#new_content").val();
+        var total = $("#new_total").text();
+        var len; //记录剩余字符串的长度
+        if (content.length >= total) //textarea控件不能用maxlength属性，就通过这样显示输入字符数了
+        {
+            $("#new_content").val(content.substr(0, total));
+            len = total;
+        } else {
+            len = content.length;
+        }
+        $("#surplus_word").html(len);
+    }
+</script>
+<script type="text/javascript">
+    function check_img_type(file) {
+        var fileUpload = document.getElementById("new_img");
+        var imagePath = fileUpload.value;
+        var type = imagePath.substr(imagePath.lastIndexOf(".")).toUpperCase();
+        if (!(type == ".JPEG" || type == ".JPG" || type == ".GIF" || type == ".PNG")) {
+            alert('只能上传(jpg)|(png)|(bmp)|(gif)|(jpeg)格式的图片');
+            fileUpload.value = "";
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    //图片上传预览    IE是用了滤镜。
+    function previewImage(file) {
+        if (!check_img_type(file)){
+            return ;
+        }
+        var MAXWIDTH = 260;
+        var MAXHEIGHT = 180;
+        var div = document.getElementById('preview');
+        div.style.display = "block";
+        if (file.files && file.files[0]) {
+            div.innerHTML = '<img id=img_head>';
+            var img = document.getElementById('img_head');
+            img.onload = function () {
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width = rect.width;
+                img.height = rect.height;
+                // img.style.marginLeft = rect.left+'px';
+                // img.style.marginTop = rect.top + 'px';
+            };
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file.files[0]);
+        }
+        else //兼容IE
+        {
+            var sFilter = 'filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=img_head>';
+            var img = document.getElementById('img_head');
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status = ('rect:' + rect.top + ',' + rect.left + ',' + rect.width + ',' + rect.height);
+            div.innerHTML = "<div id=divhead style='width:" + rect.width + "px;height:" + rect.height + "px;margin-top:" + rect.top + "px;" + sFilter + src + "\"'></div>";
+        }
+    }
+    function clacImgZoomParam(maxWidth, maxHeight, width, height) {
+        var param = {top: 0, left: 0, width: width, height: height};
+        if (width > maxWidth || height > maxHeight) {
+            rateWidth = width / maxWidth;
+            rateHeight = height / maxHeight;
+
+            if (rateWidth > rateHeight) {
+                param.width = maxWidth;
+                param.height = Math.round(height / rateWidth);
+            } else {
+                param.width = Math.round(width / rateHeight);
+                param.height = maxHeight;
+            }
+        }
+
+        param.left = Math.round((maxWidth - param.width) / 2);
+        param.top = Math.round((maxHeight - param.height) / 2);
+        return param;
+    }
+</script>
+
+</body>
+</html>

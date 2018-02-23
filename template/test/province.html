@@ -1,0 +1,368 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'/>
+    <meta content="telephone=no,email=no" name="format-detection"/>
+
+    <title>省市区</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'city-picker/css/weui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'city-picker/css/jquery-weui.css' %}">
+    <link rel="stylesheet" href="{% static 'city-picker/css/province.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.min.css' %}"/>
+    <style>
+        .masking {
+            z-index: 3;
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background: white;
+            left: 0;
+            top: 0;
+            opacity: 0.85;
+        }
+
+        .codeMessage {
+            z-index: 4;
+            margin: 0 auto;
+            height: 450px;
+            width: 320px;
+            background: white;
+            box-shadow: 1px 1px 11px 7px whitesmoke;
+        }
+
+        .codeImg {
+            z-index: 4;
+            padding: 25px 24px;
+        }
+
+        .div-qrcode {
+            z-index: 4;
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            left: 0;
+            top: 0;
+        }
+
+        .buy-now-qrcode {
+            border: 0;
+            margin: 0;
+            height: 57px;
+            padding: 0 20px;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+            background: #ee5338;
+            position: fixed;
+            right: 0px;
+            bottom: 0px;
+        }
+
+        .sumPrice {
+            position: fixed;
+            left: 11px;
+            bottom: 11px;
+        }
+
+        .last_div {
+            background-color: white;
+            position: fixed;
+            left: 0px;
+            bottom: 0px;
+            height: 57px;
+            width: 100%;
+        }
+
+        .buy-alipay {
+            z-index: 4;
+            position: fixed;
+            color: white;
+            background-color: #00aaef;
+            font-size: 29px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-block;
+            height: 64px;
+            width: 275px;
+            border-radius: 6px;
+        }
+
+        .alipayMessage1 {
+            z-index: 4;
+            position: fixed;
+            font-size: 16px;
+            margin-left: -99px;
+        }
+
+        .alipayMessage2 {
+            z-index: 4;
+            position: fixed;
+            font-size: 16px;
+            margin-left: -136px;
+        }
+
+        .login-top {
+            z-index: 4;
+            width: 68px;
+            height: 68px;
+            position: fixed;
+            background: url({% static 'img/qr_login.gif' %}) no-repeat right top;
+        }
+
+        .code_close {
+            z-index: 4;
+            background-color: #bdbdbd;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            -o-border-radius: 50%;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            position: fixed;
+        }
+
+        .pay_change{
+            z-index: 4;
+            width: 60px;
+            height: 60px;
+            position: fixed;
+        }
+
+        .icon_code_close {
+            width: 14px;
+            height: 14px;
+            display: block;
+            margin: 8px auto 0;
+            cursor: pointer;
+            background: url({% static 'img/close.png' %}) no-repeat center center;
+        }
+
+        .num {
+            background: #f8f8f8;
+            height: 57px;
+            width: 50px;
+            border: 0;
+            margin: 0;
+            font-weight: bolder;
+            font-size: 20px;
+            padding: 0;
+        }
+
+        .minusPlus{
+            position: absolute;
+            margin-top: 22px;
+            right: 10px;
+        }
+
+        .pMessage{
+            text-align: center;
+        }
+
+        .notify {
+            width: 150px;
+            height: auto;
+            position: fixed;
+            z-index: 11;
+            bottom:10%;
+            right: 0;
+            margin: 0;
+        }
+
+        #qrCode {
+            position: fixed;
+            margin-top: 20px;
+            margin-left: 6px;
+            margin-bottom: 6px;
+        }
+
+        #display {
+            z-index: 4;
+            position: fixed;
+            margin-left: 100px;
+            margin-top: 340px;
+        }
+
+        #imgMessage {
+            position: fixed;
+            margin-left: 6px;
+            margin-top: 280px;
+        }
+        .code_paid1{
+            position: fixed;
+            margin-left: 56px;
+            margin-top: 277px;
+        }
+        .code_paid2{
+            position: fixed;
+            margin-left: 56px;
+            margin-top: 300px;
+        }
+
+        #allMessage {
+            padding: 10px 15px;
+        }
+
+        #spanCurrentNum {
+            background: white;
+        }
+
+        #spanMinus, #spanPlus {
+            color: #9a9a9a;
+        }
+
+        /*去掉a链接所有的样式*/
+        a:link, a :active, a:visited, a:hover {
+            text-decoration: none;
+            color: #4280ec;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: #f5f5f5;
+{#            background: url({% static 'img/ds_goods/base.jpg' %}) no-repeat;#}
+{#            background-size:100%;#}
+        }
+    </style>
+</head>
+
+
+<body>
+<header class='demos-header'>
+    <a class="pull-left demos-title" id="btnBack">
+        <i class="fa fa-angle-left"></i>
+        返回
+    </a>
+    <div class="demos-title" id="demos-title" style="text-align: center;">
+        添加配送联系方式
+    </div>
+</header>
+{% if message %}
+    <br>
+    <p class="pMessage">{{ message }}</p>
+{% else %}
+    <input id='commodity_desc' hidden="hidden" type="text" value="{{ ret.ebf_commodity_desc }}">
+
+    <div class="weui_cells weui_cells_form" id="allMessage">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label for="name" class="weui_label">手机号码</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary col-xs-8 col-sm-10 col-md-10 col-lg-10" style="text-align: left">
+                {% if items.tel %}
+                    <input class="weui_input" placeholder="请填写收货人的电话号码" id='telephone' maxlength="11" type="text" value="{{ items.tel }}">
+                {% else %}
+                    <input class="weui_input" placeholder="请填写收货人的电话号码" id='telephone' maxlength="11" type="text">
+                {% endif %}
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd" style="width: 105px;">
+                <label for="name" class="weui_label">地区</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary  col-xs-9 col-sm-9 col-md-10 col-lg-10">
+                <input class="weui_input" id="city-picker" type="text" style="text-align: left">
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd" style="width: 105px;">
+                <label for="name" class="weui_label">详细地址</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary col-xs-9 col-sm-9 col-md-10 col-lg-10">
+                {% if items.address %}
+                    <textarea class="weui_input" placeholder="建议您如实填写收货地址，例如街道名称，门牌号码，楼层和房间号等信息" id='address'
+                          style="line-height: 1.411765; padding-top: 15px;">{{ items.address }}</textarea>
+                {% else %}
+                    <textarea class="weui_input" placeholder="建议您如实填写收货地址，例如街道名称，门牌号码，楼层和房间号等信息" id='address'
+                          style="line-height: 1.411765; padding-top: 15px;"></textarea>
+                {% endif %}
+            </div>
+        </div>
+        <div class="weui_cell" style="padding-bottom: 35px;">
+            <div>
+                {% if commodity_image %}
+                    <img src="{{ commodity_image }}" style="height: 100px;width: 100px;">
+                {% else %}
+                    <img src="{% static 'img/upload/webwxgeticon.jpg' %}" style="height: 100px;width: 100px;">
+                {% endif %}
+                <span id="commodity_title" style="margin-left: 1em;">哆啦A梦</span>
+            </div>
+            <div class="col-xs-2 col-sm-3 col-md-3 col-lg-2" style="text-align: center;">
+                ￥<span id="commodity_price" >1.9</span>
+            </div>
+            <div class="minusPlus">
+                <input type="button" class="num" value="-" id="spanMinus">
+                {% if items.amount %}
+                    <input type="button" class="num" value="1" id="spanCurrentNum">
+                {% else %}
+                    <input type="button" class="num" value="1" id="spanCurrentNum">
+                {% endif %}
+                <input type="button" class="num" value="+" id="spanPlus">
+            </div>
+        </div>
+        <div class="last_div">
+            <div class="weui_cell_hd col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="name" class="sumPrice">
+                    合计：<span style="color: red; font-size: 24px;">￥&nbsp;</span>
+                    <span id="sum_price" style="color: red; font-size: 24px;">1.9</span>
+                </label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align: right;">
+                <button type="submit" class="buy-now-qrcode" id="buy-now-qrcode">立即付款</button>
+            </div>
+        </div>
+    </div>
+    <div class="masking" hidden="hidden">
+
+    </div>
+    <div class="notifications bottom-right notify"></div>
+    <div class="div-qrcode" hidden="hidden">
+        <div id="codeMessage" class="codeMessage">
+            <div class="app_alipay">
+                <a class="login-top" id="qrcode-trigger" title="扫码支付" href="javascript:void(0)"></a>
+                <img src="{% static 'img/alipay.png' %}" class="imgAlipay"
+                     style="height: 100px;width: 100px; margin-top: 80px; margin-left: 110px;">
+                <button type="submit" class="buy-alipay" id="buy-alipay">立即付款</button>
+                <span class="alipayMessage1">点击上面按钮</span>
+                <span class="alipayMessage2">或者选择右上角扫码支付</span>
+            </div>
+            <div class="qr_close">
+{#                <a class="code_close" href="javascript:void(0)" title="关闭"><span#}
+{#                        class="icon_code_close"></span></a>#}
+                <img src="{% static 'img/change.png' %}" class="pay_change">
+                <div class="codeImg">
+                    <div id="qrCode">
+
+                    </div>
+                    <br>
+                    <div id="imgMessage">
+                        <img src="{% static 'img/qrcode.png' %}" style="height: 38px;width: 38px;">
+                    </div>
+                    <span class="code_paid1">手机扫一扫付款</span>
+                    <span class="code_paid2">或者选择右上角平板支付</span>
+                    <div id="display">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<script>
+    const CONFIG = {
+        "baseUrl": "{% static 'lib' %}",
+        "version": "v={{ version_code }}"
+    };
+    var logo_path = "{% static 'img/upload/xingguo.jpg' %}";
+    var province_city = "";
+    var max_amount = 5;
+</script>
+<script data-main="{% static 'lib/province/main.js' %}?v={{ version_code }}"
+        src="{% static 'js/require.js' %}"></script>
+</body>
+</html>

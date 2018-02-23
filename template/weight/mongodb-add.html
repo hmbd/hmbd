@@ -1,0 +1,112 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>添加信息</title>
+    <script type="text/javascript" src="{% static 'jedate/jedate.min.js' %}"></script>
+    <script type="text/javascript">
+        // 检验数据合法性
+        function validateDiscount() {
+            var ret = true;
+            var txtweight = document.getElementById("weight").value;
+            var txtruntime = document.getElementById("run_time").value;
+            var txtremark = document.getElementById("remark").value;
+            if (!(/^[\d]*(\.{0,1})[\d]+$/gi.test(txtweight))) {
+                alert("体重只能是浮点数或整数");
+                ret = false;
+            }
+            else if (!(/^[\d]*(\.{0,1})[\d]+$/gi.test(txtruntime))) {
+                alert("时长只能是浮点数或整数");
+                ret = false;
+            }
+            else if ((/^\s*$/gi.test(txtremark))) {
+                alert("备注不能为空");
+                ret = false;
+            }
+            return ret;
+        }
+    </script>
+    <style>
+        .div_add {
+            background-color: #00FFFF;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 250%;
+            height: 380px;
+            width: 400px;
+            text-align: center;
+            margin-top: -190px;
+            margin-left: -250px;
+            line-height: 50px;
+            vertical-align: -13px;
+            position: absolute;
+            left: 55%;
+            top: 50%;
+        }
+        .remark_font{
+            position: absolute;
+            left: 21%;
+            top: 53%;
+        }
+        .remark_input{
+            position: absolute;
+            left: 32%;
+            top: 56%;
+        }
+        .button_button{
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+            left: 27%;
+            top: 77%;
+        }
+        #pMessage {
+            color: red;
+            line-height: 15px;
+            padding: 0px 155px;
+        }
+    </style>
+</head>
+<body bgcolor="E6EFF8">
+<div class="div_add">
+    <div>
+        <p><strong><font size="5" color="blue"><b>添加信息</b></font></strong></p>
+    </div>
+    <!-- from表单 Start-->
+    <form method='post' action="mongodb_add" name="mongodb_add" enctype="multipart/form-data">
+        <div>
+            <font size="4" color="blue">体重:</font>
+            <input type="text" name="weight" id="weight" placeholder="输入体重" style="height:30px;width:188px"/>
+        </div>
+        <div>
+            <font size="4" color="blue">时长:</font>
+            <input type="text" name="run_time" id="run_time" placeholder="输入时长" style="height:30px;width:188px"/>
+        </div>
+        <div>
+            <font size="4" color="blue">时间:</font>
+            <input class="datainp" id="datebut" name="system_time" type="text" value="{{ now_time }}"
+                   style="height:30px;width: 140px;" readonly>
+            <input type="button" onClick="jeDate({dateCell:'#datebut',isTime:true,format:'YYYY-MM-DD hh:mm:ss'})"
+                   value="打开">
+        </div>
+        <div>
+            <font class="remark_font" size="4" color="blue">备注:</font>
+            <textarea name="remark" id="remark" cols=24 rows=4 class="remark_input" placeholder="输入备注"></textarea>
+        </div>
+        {% if message %}
+            <div>
+                <p id="pMessage">{{ message }}</p>
+            </div>
+        {% endif %}
+        <div class="button_button">
+            <input type="submit" value="提交" style="width:100px;height:40px;" onclick="return validateDiscount()"/>
+            <input type="reset" value="重置" style="width:100px;height:40px;"/>
+        </div>
+    </form>
+    <!--from表单 End-->
+</div>
+
+
+</body>
+</html>

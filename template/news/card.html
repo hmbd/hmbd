@@ -1,0 +1,259 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>我的生活</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="{% static 'img/sucess.png' %}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" href="{% static 'sui/css/sm.min.css' %}">
+    <link rel="stylesheet" href="{% static 'sui/css/sm-extend.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'qqface/css/reset.css' %}">
+    <style>
+        span.emotion {
+            width: 42px;
+            height: 20px;
+            background: url({% static 'qqface/img/icon.gif' %}) no-repeat 2px 2px;
+            padding-left: 20px;
+            cursor: pointer
+        }
+
+        span.emotion:hover {
+            background-position: 2px -28px
+        }
+
+        .facebook-card .facebook-name {
+            margin-left: 2.2rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .facebook-card .facebook-date {
+            margin-left: 2.2rem;
+            font-size: .65rem;
+            color: #5f646e;
+        }
+
+        .facebook-card .facebook-avatar {
+            float: left;
+        }
+
+        .comment {
+            width: 100%;
+            height: 25px;
+        }
+
+        .card-thing {
+            margin-left: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="page-group">
+    <!-- 你的html代码 -->
+    <div class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left" id="btnBack">
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+
+            <h1 class="title">我的生活</h1>
+            <a class="button button-link button-nav pull-right" href="{% url 'card_add' %}">
+                发说说
+            </a>
+        </header>
+        <div class="content">
+            <!-- 这里是页面内容区 -->
+            <div class="page-index">
+                {% for rc in content %}
+                    <div class="card facebook-card">
+                        <div class="card-header no-border">
+                            <div class="facebook-avatar">
+                                <img src="{{ rc.upload_head }}" width="34" height="34">
+                            </div>
+                            <div class="facebook-name">{{ rc.nickname }}</div>
+                            <div class="facebook-date">{{ rc.create_date }}</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-content-inner">
+                                <div id="new_{{ rc.new_id }}"></div>
+                                {% if rc.img %}
+                                    <img src="{{ rc.img }}" width="100" height="100">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="javascript:void(0)" new-id="{{ rc.new_id }}"
+                               username="{{ request.session.username }}" class="link thing">
+                                {% if rc.thing and request.session.username in rc.thing %}
+                                    取消赞
+                                {% else %}
+                                    赞
+                                {% endif %}
+                            </a>
+                            {% if request.session.user_type == 1 or request.session.username == rc.username %}
+                                <a href="javascript:void(0)" new-id="{{ rc.new_id }}" class="link delete">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% if rc.thing %}
+                            <div>
+                                {% for i in rc.thing %}
+                                    <span>{{ i }}&nbsp;</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% for i in rc.thing_content %}
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <div id="content_{{ i.content_id }}">{{ i.new_user }}:{{ i.create_date }}<br>&nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="card-content">
+                            <div class="card-content-inner">
+                                <input type="text" class="comment" id="content_{{ rc.new_id }}" name="{{ rc.new_id }}"
+                                       placeholder="说点什么吧">
+                            </div>
+                            <div class="thing_{{ rc.new_id }}" hidden="hidden">
+                                <span class="emotion emotion_{{ rc.new_id }}"></span>
+                                <button type="submit" class="btn btn-default card-thing" id="btnThing_{{ rc.new_id }}"
+                                        new-id="{{ rc.new_id }}">
+                                    <i class="fa fa-check"></i>评论
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'qqface/js/jquery-browser.js' %}"></script>
+<script type="text/javascript" src="{% static 'qqface/js/jquery.qqFace.js' %}"></script>
+<script type="text/javascript">
+    $(function () {
+        var list ={{ content|safe }};
+        var len = list.length;
+        for (var i = 0; i < len; i++) {
+            $('.emotion_' + list[i].new_id).qqFace({
+                id: 'facebox',
+                assign: 'content_' + list[i].new_id,
+                path: '{% static 'qqface/face/' %}',	//表情存放的路径
+                result: {{ result|safe }}
+            });
+        }
+    });
+</script>
+<script>
+    // 返回按钮
+    $('#btnBack').click(function () {
+        //window.location.href = document.referrer;//返回到上一个页面
+        window.history.go(-1);
+    });
+</script>
+<script type='text/javascript' src="{% static 'zepto/zepto.min.js' %}" charset='utf-8'></script>
+<script type='text/javascript' src="{% static 'sui/js/sm.js' %}" charset='utf-8'></script>
+<script type='text/javascript' src="{% static 'sui/js/sm-extend.js' %}" charset='utf-8'></script>
+<script>
+    $(function () {
+        var new_content = {{ new_id_content|safe }};
+        $.each(new_content, function (key, value) {
+            $('#new_' + value.new_id).html(value.content);
+        });
+        var content_content = {{ content_id_content|safe }};
+        $.each(content_content, function (key, value) {
+            $('#content_' + value.content_id).append(value.content);
+        });
+    });
+</script>
+<script>
+    // 赞
+    $('.thing').click(function () {
+        var new_id = $(this).attr('new-id');
+        var user = $(this).attr('username');
+        $.ajax({
+            url: 'card_thing',
+            data: {
+                'new_id': new_id,
+                'user': user
+            },
+            type: 'POST',
+            dataType: "json",
+            success: function (data) {
+                if (data.status == 0) {
+                    console.log(data.data);
+                    location.reload();
+                } else {
+                    alert(data.data);
+                }
+            },
+            error: function () {
+                alert("赞操作失败");
+            }
+        });
+    });
+    // 评论
+    $('.comment').focus(function () {
+        $(this).css("height", 50);
+        var now_new_id = $(this).attr("name");
+        $(".thing_" + now_new_id).show();
+        $('#btnThing_' + now_new_id).click(function () {
+            var new_id = $(this).attr('new-id');
+            var now_content = $("#content_" + now_new_id).val();
+            $.ajax({
+                url: 'comment_thing',
+                data: {
+                    'new_id': new_id,
+                    'now_content': now_content
+                },
+                type: 'POST',
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 0) {
+                        console.log(data.data);
+                        location.reload();
+                    } else {
+                        alert(data.data);
+                    }
+                },
+                error: function () {
+                    alert("评论失败");
+                }
+            });
+        });
+    });
+    $(".comment").blur(function () {
+        $(this).css("height", 25);
+        {#        var now_new_id = $(this).attr("name");#}
+        {#        $(".thing_" + now_new_id).hide();#}
+    });
+    // 删除
+    $('.delete').click(function () {
+        if (window.confirm('确定删除?')) {
+            var new_id = $(this).attr('new-id');
+            $.get('card_del', {"new_id": new_id}, function (data) {
+                if (data.status == 0) {
+                    console.log(new_id + data.data);
+                    window.location.reload(true);
+                } else {
+                    alert(data.data);
+                }
+            }, 'json');
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>适应屏幕大小</title>
+    <style>
+        html {
+            font-size: 10px;
+        }
+
+        .red {
+            margin: 0 auto;
+            text-align: center;
+            width: 10rem;
+            height: 5rem;
+            background-color: red;
+            font-size: 3em;
+        }
+
+        .blue {
+            margin: 1rem auto auto auto;
+            text-align: center;
+            width: 10rem;
+            height: 5rem;
+            background-color: blue;
+            font-size: 3em;
+        }
+    </style>
+</head>
+
+<body>
+<div class="red">
+    红色
+</div>
+<div class="blue">
+    蓝色
+</div>
+</body>
+<script type="text/javascript">
+    window.onload = function () {
+        setFontSize();
+    };
+    window.onresize = function () {
+        setFontSize();
+    };
+    var setFontSize = function () {
+        var wh = document.documentElement.clientWidth;
+        console.log("width:" + wh);
+        if (wh > 320) {
+            var w = wh / 32;
+            var hl = document.getElementsByTagName("html")[0];
+            hl.style.fontSize = w + "px";
+        }
+        else {
+            console.log("屏幕不支持");
+        }
+    }
+</script>
+</html>

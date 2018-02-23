@@ -1,0 +1,50 @@
+{
+/*# --------------------------------------公共的样式开始 ------------------------------#*/
+}
+/*body, html {*/
+    /*height: 100%;*/
+    /*-webkit-tap-highlight-color: transparent;*/
+/*}*/
+
+.demos-title {
+    text-align: center;
+    font-size: 25px;
+    /*color: #3cc51f;*/
+    color: black;
+    font-weight: 400;
+    margin: 0 0;
+}
+
+.demos-sub-title {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+
+
+.demos-content-padded {
+    padding: 15px;
+}
+
+.demos-second-title {
+    text-align: left;
+    font-size: 24px;
+    color: #3cc51f;
+    font-weight: 400;
+    margin: 0 1%;
+}
+
+footer {
+    text-align: center;
+    font-size: 14px;
+    padding: 20px;
+}
+
+.demos-header{
+    margin-top: 20px;
+}
+/*去掉a链接所有的样式*/
+a:link, a :active, a:visited, a:hover {
+    text-decoration: none;
+    color: blue;
+}

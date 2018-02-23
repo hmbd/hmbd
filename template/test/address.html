@@ -1,0 +1,165 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>当前位置</title>
+    <style>
+        .num_up {
+            margin-top: -5px;
+            left: 90px;
+            color: blue;
+            font-size: 70px;
+            cursor: pointer;
+        }
+
+        .num_down {
+            margin-top: -12px;
+            left: 20px;
+            color: blue;
+            font-size: 70px;
+            cursor: pointer;
+        }
+
+        .number {
+            margin-top: -7px;
+            left: 50px;
+            color: blue;
+            font-size: 70px;
+            cursor: pointer;
+        }
+
+        .myclose {
+            color: black;
+            position: absolute;
+            font-size: 40px;
+            font-weight: bold;
+            left: 18%;
+            cursor: pointer;
+        }
+
+        /* 阅读全文 start */
+        .read-all:hover {
+            border-color: #222;
+            color: #222;
+            background: #fff;
+        }
+
+        .read-all {
+            padding: 0;
+            font-size: 18px;
+            color: #666;
+            background: none;
+            border: none;
+            border-bottom: 2px solid #666;
+            transition-property: border;
+            text-decoration: none;
+            margin-top: 100px;
+            margin-left: 100px;
+        }
+
+        /* 阅读全文 end */
+
+        /* 目录 start */
+
+        a:hover{
+            background: red;
+        }
+        li:hover{
+            background: blue;
+        }
+
+        /* 目录 end */
+    </style>
+</head>
+<body>
+<div id="idJsShow">
+
+</div>
+<div>
+    <div>
+        <span class="num_down" id="spanMinus">-</span>
+    </div>
+    <div>
+        <span class="number" id="spanCurrentNum">1</span>
+    </div>
+    <div>
+        <span class="num_up" id="spanPlus">+</span>
+    </div>
+    <div>
+        <span title="关闭" class="myclose" onclick="javascript:$('#idJsShow').hide();$('#spanMinus').hide();">×</span>
+    </div>
+</div>
+<div>
+    <a class="read-all" href="#" rel="contents">阅读全文 »</a>
+</div>
+<div id="toc" class="tocify">
+    <ul id="tocify-header1" class="tocify-header nav nav-list">
+        <li class="tocify-item" data-unique="基本用法" style="cursor: pointer;"><a>基本用法</a></li>
+    </ul>
+    <ul id="tocify-header2">
+        <li class="tocify-item" data-unique="验证失败报SchemaError异常，需要自己处理" style="cursor: pointer;"><a>验证失败报 SchemaError
+            异常，需要自己处理</a></li>
+    </ul>
+    <ul id="tocify-header3">
+        <li class="tocify-item" data-unique="先进行转换在验证" style="cursor: pointer;"><a>先进行转换在验证</a></li>
+    </ul>
+    <ul id="tocify-header4">
+        <li class="tocify-item" data-unique="参数是容器类型" style="cursor: pointer;"><a>参数是容器类型</a></li>
+    </ul>
+    <ul id="tocify-header5">
+        <li class="tocify-item" data-unique="验证字典的key,value" style="cursor: pointer;"><a>验证字典的key, value</a></li>
+    </ul>
+    <ul id="tocify-header6">
+        <li class="tocify-item" data-unique="部分键值验证,不用验证的部分写object即可" style="cursor: pointer;"><a>部分键值验证,
+            不用验证的部分写object即可</a></li>
+    </ul>
+    <ul id="tocify-header7">
+        <li class="tocify-item" data-unique="Optional可选：dd可以不存在，但存在必须是int类型" style="cursor: pointer;"><a>Optional 可选：
+            dd可以不存在，但存在必须是int类型</a></li>
+    </ul>
+    <ul id="tocify-header8">
+        <li class="tocify-item" data-unique="And与" style="cursor: pointer;"><a>And 与</a></li>
+    </ul>
+    <ul id="tocify-header9">
+        <li class="tocify-item" data-unique="Or或" style="cursor: pointer;"><a>Or 或</a></li>
+    </ul>
+</div>
+<script src="{% static 'js/jquery-2.0.0.js' %}"></script>
+<script>
+    var url = 'http://chaxun.1616.net/s.php?type=ip&output=json&callback=?&_=' + Math.random();
+    $.getJSON(url, function (data) {
+        // 当前ip
+        $("#idJsShow").html('<span style="color : blue;">ip地址：' + data.Ip + '</span>');
+    });
+
+</script>
+<script>
+    $.getScript('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', function () {
+        if (remote_ip_info.ret == '1') {
+            for (var sProp in remote_ip_info) {
+                console.log('key：' + sProp + '  value:' + remote_ip_info[sProp]);
+            }
+            $("#idJsShow").append('<br><br>' + '国家：' + remote_ip_info.country + '省：' + remote_ip_info.province + '市：' + remote_ip_info.city + '区：' + remote_ip_info.district + 'ISP：' + remote_ip_info.isp + '类型：' + remote_ip_info.type + '其他：' + remote_ip_info.desc + '<br><br>');
+        }
+        else {
+            alert('没有找到匹配的IP地址信息！');
+        }
+    });
+</script>
+<script>
+    $('#spanPlus').click(function () {
+        var amount = parseInt($('#spanCurrentNum').text());
+        $('#spanCurrentNum').text(++amount);
+
+    });
+    $('#spanMinus').click(function () {
+        var amount = parseInt($('#spanCurrentNum').text());
+        if (amount > 1) {
+            $('#spanCurrentNum').text(--amount);
+        }
+    });
+</script>
+</body>
+</html>
