@@ -7,6 +7,7 @@
 * redis
 
 ## 注意
+* app/\__init__.py中千万不要引入model和同级的urls,views
 * Python版本3.4.1, Django版本1.7,注意两者的版本兼容
 * mysql启动方式不能用socket启动
 * Pillow

@@ -72,9 +72,19 @@ ROOT_URLCONF = 'hmbd.urls'
 WSGI_APPLICATION = 'hmbd.wsgi.application'
 
 # 模板页目录配置
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'template'),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'template')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                "django.contrib.auth.context_processors.auth",
+            ]
+        }
+    },
+]
+
 # TEMPLATE_DIRS = (
 #     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
 #     # Always use forward slashes, even on Windows.
@@ -82,7 +92,8 @@ TEMPLATE_DIRS = (
 #     BASE_DIR + "/template",
 # )
 # 设置语言
-LANGUAGE_CODE = 'zh-cn'
+LANGUAGE_CODE = 'en'
+
 # 设置支持的语言
 LANGUAGES = (('zh-cn', u'中文'), ('en', u'English'))
 '''LANGUAGES = (

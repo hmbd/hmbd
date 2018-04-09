@@ -1,30 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, url
-from app import views
+from django.urls import path
+from . import views
 
-hmbd_patterns = patterns(
-        'app.views',
-        url(r'^$', 'login', name='login'),
-        url(r'login$', 'login', name='login'),
-        url(r'^register$', 'register', name='register'),
-        url(r'^index$', 'index', name='index'),
-        url(r'^index/index$', 'index1', name='index1'),
-        url(r'^logout$', 'logout', name='logout'),
-        url(r'^statistics$', 'statistics', name='statistics'),
-        url(r'^ajax_dict$', 'ajax_dict', name='ajax-dict'),
-        url(r'^main$', 'main', name='main'),
-        url(r'^modify_pwd$', 'modify_pwd', name='modify_pwd'),
-        url(r'^my_profile$', 'my_profile', name='my_profile'),
-        url(r'^get_code$', views.get_code, name='get_code'),
-        url(r'^test1$', 'test1', name='test1'),
-        url(r'^test2$', 'test2', name='test2'),
-        url(r'^test3$', 'test3', name='test3'),
-        url(r'^top_height$', 'top_height', name='top_height'),
-        url(r'^jquery_qr_code$', 'jquery_qr_code', name='jquery_qr_code'),
-        url(r'^province$', 'province', name='province'),
-        url(r'^address$', 'address', name='address'),
-        url(r'^loading$', 'loading', name='loading'),
-        url(r'^menu$', 'menu', name='menu')
-)
+hmbd_patterns = [
+        path('', views.login, name='login'),
+        path('login', views.login, name='login'),
+        path('register', views.register, name='register'),
+        path('index', views.index, name='index'),
+        path('index/index', views.index1, name='index1'),
+        path('logout', views.logout, name='logout'),
+        path('statistics', views.statistics, name='statistics'),
+        path('ajax_dict', views.ajax_dict, name='ajax-dict'),
+        path('main', views.main, name='main'),
+        path('modify_pwd', views.modify_pwd, name='modify_pwd'),
+        path('my_profile', views.my_profile, name='my_profile'),
+        path('get_code', views.get_code, name='get_code'),
+        path('test1', views.test1, name='test1'),
+        path('test2', views.test2, name='test2'),
+        path('test3', views.test3, name='test3'),
+        path('top_height', views.top_height, name='top_height'),
+        path('jquery_qr_code', views.jquery_qr_code, name='jquery_qr_code'),
+        path('province', views.province, name='province'),
+        path('address', views.address, name='address'),
+        path('loading', views.loading, name='loading'),
+        path('menu', views.menu, name='menu')
+]

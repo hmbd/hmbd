@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, url
+from django.urls import path
+from app.weight import views
 
-weight_patterns = patterns(
-        'app.weight.views',
-        url(r'^mongodb_add$', 'mongodb_add', name='mongodb_add'),
-        url(r'mongodb_query$', 'mongodb_query', name='mongodb_query'),
-        url(r'mongodb_update$', 'mongodb_update', name='mongodb_update'),
-        url(r'mongodb_delete$', 'mongodb_delete', name='mongodb_delete'),
-        url(r'weight_run$', 'weight_run', name='weight_run'),
-        url(r'ajax_run$', 'ajax_run', name='ajax-dict')
-)
+weight_patterns = [
+    path('mongodb_add', views.mongodb_add, name='mongodb_add'),
+    path('mongodb_query', views.mongodb_query, name='mongodb_query'),
+    path('mongodb_update', views.mongodb_update, name='mongodb_update'),
+    path('mongodb_delete', views.mongodb_delete, name='mongodb_delete'),
+    path('weight_run', views.weight_run, name='weight_run'),
+    path('ajax_run', views.ajax_run, name='ajax-dict')
+]

@@ -198,6 +198,7 @@ def rest_api(request):
             else:
                 data = {"online_number": m["online_number"], 'system_time': m["system_time"]}
             return JsonResponse(data)
+        return JsonResponse({"data": "data is null"})
     # 插入数据
     elif request.method == "POST":
         online_number = request.GET.get("online_number", None)

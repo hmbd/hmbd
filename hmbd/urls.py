@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, include, url
+from django.urls import path, include
 from django.contrib import admin
 
 from app.mmGrid.urls import grid_patterns
@@ -12,12 +12,12 @@ from app.weight.urls import weight_patterns
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
-                       url(r'^admin', include(admin.site.urls)),
-                       url(r'^', include(hmbd_patterns)),
-                       url(r'^', include(grid_patterns)),
-                       url(r'^', include(weight_patterns)),
-                       url(r'^', include(news_patterns)),
-                       url(r'^api', rest_api),
-                       url(r'', login),
-                       )
+urlpatterns = [
+    path('admin', admin.site.urls),
+    path('', include(hmbd_patterns)),
+    path('', include(grid_patterns)),
+    path('', include(weight_patterns)),
+    path('', include(news_patterns)),
+    path('api', rest_api),
+    path('', login),
+]
