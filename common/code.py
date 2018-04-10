@@ -75,7 +75,7 @@ class Captcha(object):
             return code
 
         # 数字字母组合
-        def number_word():
+        def char():
             _letter_cases = "abcdefghjkmnpqrstuvwxy"  # 小写字母，去除可能干扰的i，l，o，z
             _upper_cases = _letter_cases.upper()  # 大写字母
             _numbers = ''.join(map(str, range(3, 10)))  # 数字
@@ -130,8 +130,8 @@ class Captcha(object):
         if self.type == 'word':
             c = int(8 // len(self.code) * 3) or 3
         elif self.type == 'number':
-            c = 4
-        elif self.type == 'number_word':
+            c = 2
+        else:
             c = 3
 
         for i in range(random.randrange(c - 2, c)):
@@ -152,23 +152,19 @@ class Captcha(object):
         x = random.randrange(j, k)  # starts point
         for i in self.code:
             # 上下抖动量,字数越多,上下抖动越大
-            y = random.randrange(1, 3)
+            y = random.randrange(1, 2)
 
             if i in ('+', '=', '?'):
                 # 对计算符号等特殊字符放大处理
-                m = ceil(font_size * 0.8)
-            else:
-                # 字体大小变化量,字数越少,字体大小变化越多
-                m = random.randrange(0, int(45 // font_size) + int(font_size // 5))
+                font_size *= 1.2
 
             # 文字字体
             font_path = os.path.join(current_path, 'msyh.ttf')
-            font_size += int(ceil(m))
             # 设置字体大小和格式
-            font = ImageFont.truetype(font=font_path, size=font_size)
+            font = ImageFont.truetype(font=font_path, size=ceil(font_size))
 
             draw.text((x, y), i, font=font, fill=random.choice(font_color))
-            x += font_size * 0.9
+            x += self.img_width / len(self.code)
         del x
         del draw
         buf = io.BytesIO()

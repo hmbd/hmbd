@@ -179,8 +179,9 @@ def logout(request):
 
 # 验证码
 def get_code(request):
+    code_type = getattr(request, request.method).get("type", "number")
     # 单词存在word_code.list中
-    ca = code.Captcha(img_width=150, img_height=30, code_type="word")
+    ca = code.Captcha(img_width=150, img_height=30, code_type=code_type)
     return ca.display()
 
 
