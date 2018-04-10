@@ -13,6 +13,7 @@ def run_cmd(cmd, force=False):
                          stderr=subprocess.PIPE,
                          shell=True)
     stdout, stderr = p.communicate()
+    print(cmd)
     if stderr:
         if not force:
             raise Exception("cmd: %s, stderr: %s" % (cmd, stderr))
@@ -34,24 +35,28 @@ def create_table():
     """
     commands = [
         "python3 manage.py migrate",
-        "python3 manage.py makemigrations  app"
-        "python3 manage.py migrate",
+        "python3 manage.py makemigrations app",
+        "python3 manage.py migrate"
     ]
     for cmd in commands:
         run_cmd(cmd)
 
 
-def init_database():
+def init_data():
+    """初始化数据
+    """
     curr_path = os.path.dirname(__file__)
-    sql_path = os.path.join(curr_path, "model", "counsellor.sql")
-    cmd = "mysql -h127.0.0.1  -P3306 -uroot -proot {} < {}".format(dbconf.MYSQL_DB_MAIN, sql_path)
+    sql_path = os.path.join(curr_path, "model", "hmbd.sql")
+    cmd = "mysql -h127.0.0.1  -P{} -u{} -p{} {} < {}".format(dbconf.MYSQL_PORT_MAIN, dbconf.MYSQL_USER_MAIN,
+                                                             dbconf.MYSQL_PWD_MAIN, dbconf.MYSQL_DB_MAIN,
+                                                             sql_path)
     run_cmd(cmd, force=True)
 
 
 def main():
     create_database()
     create_table()
-    init_database()
+    init_data()
 
 
 if __name__ == '__main__':

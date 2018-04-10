@@ -25,23 +25,25 @@ SECRET_KEY = 'd0m-!yhakfswln02^x1igagew1!erjj3cyqs4u_qq#pg_v1#ca'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.1.224']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
 # Application definition
 
 INSTALLED_APPS = (
+    # django 默认,可以注释
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 自己的app目录
     'app',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 )

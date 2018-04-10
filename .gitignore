@@ -8,3 +8,4 @@ log/*
 test.py
 Makefile
 make.bat
+app/migrations

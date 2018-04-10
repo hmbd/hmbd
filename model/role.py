@@ -9,7 +9,7 @@ class Role(models.Model):
     角色拥有的菜单
     """
     # id
-    id = models.IntegerField(primary_key=True, max_length=64)
+    id = models.IntegerField(primary_key=True)
     # menu列表
     menu = models.CharField(max_length=256)
 

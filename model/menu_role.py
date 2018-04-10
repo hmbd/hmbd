@@ -9,7 +9,7 @@ class MenuRole(models.Model):
     角色表
     """
     # id
-    id = models.IntegerField(primary_key=True, max_length=64)
+    id = models.IntegerField(primary_key=True)
     # 角色名
     name = models.CharField(max_length=64)
 
