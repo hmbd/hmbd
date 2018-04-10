@@ -160,7 +160,7 @@ def mmgrid_decorator(has_user=False, db_type="model"):
 
     def _wrap(func):
         def wrap(request, **kwargs):
-            kwargs = dict(request.REQUEST, **kwargs)
+            kwargs = dict(getattr(request, request.method), **kwargs)
             if '_' in kwargs:
                 del kwargs['_']
             page = converts_str2int(kwargs.pop('page', 1), 1)

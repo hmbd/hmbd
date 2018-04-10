@@ -40,13 +40,18 @@ INSTALLED_APPS = (
     # 自己的app目录
     'app',
 )
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-)
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+MIDDLEWARE_CLASSES = [
+    'django.middleware.csrf.CsrfViewMiddleware'
+]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # mysql数据库

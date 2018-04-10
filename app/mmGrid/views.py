@@ -48,7 +48,7 @@ def ad_content_edit(request):
     :param request:
     :return:
     """
-    action = request.REQUEST.get('action', None)
+    action = getattr(request, request.method).get('action', None)
     if action is None:
         return HttpResponseRedirect(reverse("404"))
     if request.method == 'GET':

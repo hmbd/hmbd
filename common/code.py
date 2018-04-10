@@ -14,11 +14,11 @@ current_path = os.path.normpath(os.path.dirname(__file__))
 
 
 class Captcha(object):
-    def __init__(self, request, img_width=150, img_height=30, code_type='number'):
+    answer = ""
+
+    def __init__(self, img_width=150, img_height=30, code_type='number'):
         """初始化,设置各种属性
         """
-        self.django_request = request
-        self.session_key = '_django_captcha_key'
         self.words = self._get_words()
 
         # 验证码图片尺寸
@@ -41,11 +41,11 @@ class Captcha(object):
         f = open(file_path, 'r')
         return [line.replace('\n', '') for line in f.readlines()]
 
-    def _set_answer(self, answer):
-        """  设置答案
-
+    @classmethod
+    def _set_answer(cls, answer):
+        """设置答案
         """
-        self.django_request.session[self.session_key] = str(answer)
+        cls.answer = str(answer)
 
     def _yield_code(self):
         """  生成验证码文字,以及答案
@@ -100,7 +100,7 @@ class Captcha(object):
         background = (random.randrange(230, 255), random.randrange(230, 255), random.randrange(230, 255))
 
         # clean
-        self.django_request.session[self.session_key] = ''
+        self._set_answer("")
 
         # creat a image
         im = Image.new('RGB', (self.img_width, self.img_height), background)
@@ -188,7 +188,8 @@ class Captcha(object):
         buf.closed
         return HttpResponse(buf.getvalue(), 'image/gif')
 
-    def validate(self, code):
+    @classmethod
+    def validate(cls, code):
         """检查用户输入的验证码是否正确
 
         :param code: str 输入的验证码
@@ -199,7 +200,7 @@ class Captcha(object):
             False: 验证码错误
         """
 
-        _code = self.django_request.session.get(self.session_key) or ''
+        _code = cls.answer
 
-        self.django_request.session[self.session_key] = ''
+        cls._set_answer("")
         return _code.lower() == str(code).lower()

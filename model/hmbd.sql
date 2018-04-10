@@ -274,11 +274,11 @@ CREATE TABLE `ebf_account` (
 -- ----------------------------
 -- Records of ebf_account
 -- ----------------------------
-INSERT INTO `ebf_account` VALUES ('1', 'pbkdf2_sha256$15000$A$x4MHTRAYMWGTtyR6HtqDgOgtPnFNwGWz3nT4VBirtKs=', '1', '2', 'static/img/upload/xingguo.jpg', '1');
-INSERT INTO `ebf_account` VALUES ('2', 'pbkdf2_sha256$15000$A$CXnuT6VE0QSQycvFkubw08Z6M1S+6FRXc6hj56PUayk=', '2', '2', 'static/img/upload/xingguo.jpg', '1');
-INSERT INTO `ebf_account` VALUES ('3', 'pbkdf2_sha256$15000$A$Z3XnKqhS4SUE+O6y6WB9ZMH8Ikh3GNZFCEhegjtTk3M=', '3', '3', 'static/img/upload/webwxgeticon.jpg', '1');
-INSERT INTO `ebf_account` VALUES ('4', 'pbkdf2_sha256$15000$A$Vu+HO/Rm6WEoW6jr1A0MGcDfJcnHdOYzr1Obpzf6dAw=', '4', '4', 'static/img/upload/git.png', '1');
-INSERT INTO `ebf_account` VALUES ('admin', 'pbkdf2_sha256$12000$A$tYnrI1fHx175ufLALASydwN3wUirAL2SvwwrDntxDyU=', 'admin', '1', 'static/img/upload/刘亦菲.jpg', '1');
+INSERT INTO `ebf_account` VALUES ('1', 'pbkdf2_sha256$100000$A$2xj+NhIlCOCb1niehk7bL1H77Z3SXJv05VeTT6TtIoM=', '1', '2', 'static/img/1.jpg', '1');
+INSERT INTO `ebf_account` VALUES ('2', 'pbkdf2_sha256$100000$A$qWmUjzqo0QzVzKMZC4EbAtXErxFkIVpF60NwdFc6vko=', '2', '2', 'static/img/2.jpg', '1');
+INSERT INTO `ebf_account` VALUES ('3', 'pbkdf2_sha256$100000$A$cJCJQsesP9U4u1SsJrKud+ag4rFWrYqplFc3iSUKc5s=', '3', '3', 'static/img/sucess.png', '1');
+INSERT INTO `ebf_account` VALUES ('4', 'pbkdf2_sha256$100000$A$GTZ64kOa2S6OWHKRO0+gzDW8MoCw+ODqck4Gxn9FQNY=', '4', '4', 'static/img/error.png', '1');
+INSERT INTO `ebf_account` VALUES ('admin', 'pbkdf2_sha256$100000$A$64RCMWlaAkFudfNfJY5UAqU0DnHkBDvqsjPa2NXHstk=', 'admin', '1', 'static/img/favicon.ico', '1');
 
 -- ----------------------------
 -- Table structure for ebf_menu_role

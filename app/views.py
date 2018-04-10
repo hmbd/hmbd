@@ -24,10 +24,10 @@ def register(request):
     """
     if request.method == 'POST':
         # 获得表单数据
-        username = request.REQUEST.get('username', None)
-        pwd = request.REQUEST.get('password', None)
-        password2 = request.REQUEST.get('password2', None)
-        nickname = request.REQUEST.get('nickname', None)
+        username = request.POST.get('username', None)
+        pwd = request.POST.get('password', None)
+        password2 = request.POST.get('password2', None)
+        nickname = request.POST.get('nickname', None)
         upload_head = request.FILES['upload_head']
         if username and pwd and nickname and upload_head:
             # 判断两次密码是否一致
@@ -56,10 +56,10 @@ def register(request):
 def login(request):
     if request.method == 'POST':
         _code = request.POST.get('Captcha') or ''
-        ca = code.Captcha(request)
+        ca = code.Captcha()
         if ca.validate(_code):
-            username = request.REQUEST.get('username', None)
-            pwd = request.REQUEST.get('password', None)
+            username = request.POST.get('username', None)
+            pwd = request.POST.get('password', None)
             if username and pwd:
                 pwd += username
                 # 再次加密进行验证
@@ -180,7 +180,7 @@ def logout(request):
 # 验证码
 def get_code(request):
     # 单词存在word_code.list中
-    ca = code.Captcha(request, img_width=150, img_height=30, code_type="number")
+    ca = code.Captcha(img_width=150, img_height=30, code_type="word")
     return ca.display()
 
 
@@ -305,9 +305,9 @@ def main(request):
 @login_required
 def modify_pwd(request):
     if request.method == 'POST':
-        old_pwd = request.REQUEST.get("old_pwd", None)
-        new_pwd = request.REQUEST.get("new_pwd", None)
-        new_again_pwd = request.REQUEST.get("new_again_pwd", None)
+        old_pwd = request.POST.get("old_pwd", None)
+        new_pwd = request.POST.get("new_pwd", None)
+        new_again_pwd = request.POST.get("new_again_pwd", None)
         if old_pwd and new_pwd and new_again_pwd:
             if new_pwd == new_again_pwd:
                 # 从数据库获取密码

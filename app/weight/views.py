@@ -45,12 +45,12 @@ def mongodb_add(request):
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         return render(request, 'weight/mongodb-add.html', locals())
     elif request.method == 'POST':
-        weight = request.REQUEST.get('weight')
-        run_time = request.REQUEST.get('run_time')
-        remark = request.REQUEST.get('remark')
+        weight = request.POST.get('weight')
+        run_time = request.POST.get('run_time')
+        remark = request.POST.get('remark')
         if re.match(r"^[\d]*(\.{0,1})[\d]+$", weight) and re.match(r"^[\d]*(\.{0,1})[\d]+$", run_time) and not re.match(
                 r"^\s*$/", remark):
-            j_date_time = request.REQUEST.get('system_time')
+            j_date_time = request.POST.get('system_time')
             # 把字符串转成datetime类型
             time = datetime.datetime.strptime(j_date_time, "%Y-%m-%d %H:%M:%S")
             system_time = local2utc(time)
@@ -72,7 +72,7 @@ def mongodb_add(request):
 # 删除
 @login_required
 def mongodb_delete(request):
-    id = request.REQUEST.get("id", None)
+    id = getattr(request, request.method).get("id", None)
     u = query_query(request, id)
     db = get_db()
     try:
@@ -92,7 +92,7 @@ def mongodb_delete(request):
 def mongodb_update(request):
     if request.method == 'GET':
         try:
-            id = request.REQUEST.get("id", None)
+            id = request.GET.get("id", None)
             res = query_query(request, id)
             rc = res[0]
             rc['system_time'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -103,7 +103,7 @@ def mongodb_update(request):
                 '<html><script type="text/javascript">alert("修改异常"); ''window.location="/mongodb_query"</script></html>')
     elif request.method == 'POST':
         db = get_db()
-        o_id = request.REQUEST.get('id')
+        o_id = request.POST.get('id')
         try:
             _id = ObjectId(o_id)
         except Exception as e:
@@ -111,10 +111,10 @@ def mongodb_update(request):
             return HttpResponse(
                 '<html><script type="text/javascript">alert("_id错误"); ''window.location="/first"</script></html>')
         pos = db.ebf_weight.find_one({'_id': _id})
-        weight = request.REQUEST.get('weight')
-        run_time = request.REQUEST.get('run_time')
-        remark = request.REQUEST.get('remark')
-        t = request.REQUEST.get('system_time')
+        weight = request.POST.get('weight')
+        run_time = request.POST.get('run_time')
+        remark = request.POST.get('remark')
+        t = request.POST.get('system_time')
         # 把字符串转成datetime类型
         time = datetime.datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
         system_time = local2utc(time)
@@ -129,7 +129,7 @@ def mongodb_update(request):
 # 查询
 @login_required
 def mongodb_query(request):
-    o_id = request.REQUEST.get("id", None)
+    o_id = getattr(request, request.method).get("id", None)
     if request.method == 'GET':
         objects = query_query(request, o_id)
         if not objects:
@@ -139,8 +139,8 @@ def mongodb_query(request):
     if objects:
         p = Paginator(objects, 10)  # 每页10条数据的一个分页器
         try:
-            pagetype = request.REQUEST.get('pagetype', None)
-            nowpage = int(request.REQUEST.get('nowpage', 1))
+            pagetype = getattr(request, request.method).get('pagetype', None)
+            nowpage = int(getattr(request, request.method).get('nowpage', 1))
             if pagetype == 'pageup':
                 nowpage -= 1
             elif pagetype == 'pagedown':
